@@ -25,7 +25,7 @@ while continuous:
     # Slow program during off months
     while month in (7, 8, 9):
         # Debug
-        print("Sleeping one hour")
+        #print("Sleeping one hour")
         # Sleep program 1 hour then recheck month
         time.sleep(3600)
         now = datetime.datetime.now()
@@ -34,7 +34,7 @@ while continuous:
     # Slow program down during off hours
     while hour < 11:
         # Debug
-        print("Sleeping 2 minutes")
+        #print("Sleeping 2 minutes")
         # Sleep program 2 minutes then recheck hour
         time.sleep(120)
         now = datetime.datetime.now()
@@ -66,7 +66,7 @@ while continuous:
             HockeyLight_PlaySound.playsound()
             #HockeyLight_FlashLight
             # Debug
-            print("GOAL")
+            #print("GOAL")
             # Set oldScore = newScore so we can evaluate for next goal
             oldScore = newScore
 
