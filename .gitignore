@@ -1,6 +1,7 @@
 # Files I added
+.idea/
+mydjangosite/.idea/
 *.xml
-.idea
 
 # Windows image file caches
 Thumbs.db
