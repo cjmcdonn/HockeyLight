@@ -46,3 +46,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#Python files
+_pycach_
+.pyc
