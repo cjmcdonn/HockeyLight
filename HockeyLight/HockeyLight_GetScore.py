@@ -1,13 +1,13 @@
 import urllib.request
 import urllib.parse
-import HockeyLight_Config
+#import HockeyLight_Config
 
 
 def getscore():
 
     # Pull variables from HockeyLight_Config
-    theurl = HockeyLight_Config.theurl()
-    team = HockeyLight_Config.team()
+    theurl = "http://sports.espn.go.com/nhl/bottomline/scores"
+    team = "Anaheim"
 
     # GET INFO AND CLEAN IT UP
     # Get response from URL
