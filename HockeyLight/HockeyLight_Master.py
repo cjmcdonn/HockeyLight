@@ -1,8 +1,9 @@
 import datetime
 import time
-import HockeyLight_GetScore
-import HockeyLight_PlaySound
-# import HockeyLight_FlashLight
+#import HockeyLight.HockeyLight_GetScore
+import HockeyLight.HockeyLight_PlaySound
+import HockeyLight.HockeyLight_HS
+# import HockeyLight.HockeyLight_FlashLight
 
 # SET VARIABLES
 # Set first oldScore variable
@@ -42,7 +43,7 @@ while continuous:
 
     # Run GetScore from 1100 to 23:59, after 23:59 hour should reset to 0
     while 10 < hour:
-        newScore = HockeyLight_GetScore.getscore()
+        newScore = HockeyLight.HockeyLight_HS.getscore()
         # Debug
         #print("newScore", newScore)
         #print("oldScore", oldScore)
@@ -63,7 +64,7 @@ while continuous:
         # Compare to see if goal has been scored
         elif newScore > oldScore:
             # Play sound and flash light
-            HockeyLight_PlaySound.playsound()
+            HockeyLight.HockeyLight_PlaySound.playsound()
             #HockeyLight_FlashLight
             # Debug
             print("GOAL")
