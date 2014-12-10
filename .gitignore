@@ -1,6 +1,6 @@
 # Files I added
 .idea/
-*.xml
+mydjangosite/.idea/
 
 # Windows image file caches
 Thumbs.db
@@ -46,8 +46,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
-#Python files
-HockeyLight/_pycache_
-_pycach_
-.pyc
