@@ -1,7 +1,7 @@
 import datetime
 import time
 import os
-# import RPi.GPIO
+# import RPi.GPIO as GPIO
 import urllib.request
 from bs4 import BeautifulSoup
 
@@ -11,9 +11,7 @@ def getscore():
     url = "http://www.nhl.com/ice/scores.htm"
     page = urllib.request.urlopen(url)
     soup = BeautifulSoup(page)
-
-    # Scrapes score from table data out of table matching team name
-    team_list = soup.find('a', text=team)
+    team_list = soup.find('a', text=team)  # Scrapes score from table data out of table matching team name
     try:
         for td in team_list.parent.find_next_siblings('td', class_='total'):
             current_score = td.text
@@ -23,22 +21,15 @@ def getscore():
         return int(current_score)
 
 
-# def flash():
-#     def blink(pin):
-#             RPi.GPIO.output(pin, RPi.GPIO.HIGH)
-#             time.sleep(1)
-#             RPi.GPIO.output(pin, RPi.GPIO.LOW)
-#             time.sleep(1)
-#             return
-#
-#     # to use Raspberry Pi board pin numbers
-#     RPi.GPIO.setmode(RPi.GPIO.BOARD)
-#     # set up GPIO output channel
-#     RPi.GPIO.setup(11, RPi.GPIO.OUT)
-#     # blink GPIO17 50 times
-#     for i in range(0, 50):
-#             blink(11)
-#     RPi.GPIO.cleanup()
+# def blink(num_times, pin, speed):
+#     GPIO.setmode(GPIO.BOARD)  # Use board pin numbering
+#     GPIO.setup(pin, GPIO.OUT)  # Setup GPIO Pin to OUT
+#     for i in range(0,num_times):  # Run loop numTimes
+#         GPIO.output(pin, True)  # Switch on pin 7
+#         time.sleep(speed)
+#         GPIO.output(pin, False)  # Switch off pin 7
+#         time.sleep(speed)
+#     GPIO.cleanup()
 
 
 def main():
@@ -72,7 +63,7 @@ def main():
                 os.startfile('Canucks Hell Yeah Custom.mp3')  # For testing on Windows
                 # os.system('Canucks Hell Yeah Custom.mp3 -q &')  # Should work on Raspi but is untested
                 # Flash lights
-                # flash()  # Should work on Raspi but is untested
+                # blink(50, 11, 1)  # blink(num_times, pin, speed) # Should work on Raspi but is untested
                 old_score = new_score  # Set oldScore = newScore so we can evaluate for next goal
             now = datetime.datetime.now()  # Update hour while running while loop
             hour = now.hour
