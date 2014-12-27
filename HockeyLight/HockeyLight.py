@@ -60,9 +60,9 @@ def main():
                 time.sleep(3600)
             elif new_score > old_score:  # Goal has been scored
                 # Play sound
-                os.startfile('Canucks Hell Yeah Custom.mp3')  # For testing on Windows
-                # os.system('Canucks Hell Yeah Custom.mp3 -q &')  # Should work on Raspi but is untested
-                # Flash lights
+                #os.startfile('Canucks Hell Yeah Custom.mp3')  # For testing on Windows
+                os.system('omxplayer Canucks\ Hell\ Yeah\ Custom.mp3 >& /dev/null &')  # Works on Raspi
+                #  Flash lights
                 # blink(50, 11, 1)  # blink(num_times, pin, speed) # Should work on Raspi but is untested
                 old_score = new_score  # Set oldScore = newScore so we can evaluate for next goal
             now = datetime.datetime.now()  # Update hour while running while loop
