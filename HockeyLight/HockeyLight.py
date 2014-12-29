@@ -10,6 +10,8 @@ def get_score(team):
     """
     Return the score of the selected team.
 
+    Requires the Beautifulsoup4 library and Rpi.GPIO module.
+
     team = "Team_City"
     The script is configured to work with www.nhl.com/ice/scores.htm
     and will need to be modified if other URLs are used.
@@ -46,6 +48,8 @@ def get_score(team):
 def main():
     """
     Alert when a goal is scored by a specified team.
+
+    Requires omxplayer on Raspberry Pi.
 
     While in the off-season update the month every hour.
     In-season but outside of any game times check the hour every 2 minutes.
@@ -91,10 +95,10 @@ def main():
                 print('GOAL!')
                 # Play sound
                 #os.startfile('Canucks Hell Yeah Custom.mp3')  # Windows
-                #subprocess.call(['omxplayer', 'CanucksHellYeah.mp3'])  # Raspi
-                subprocess.call(
-                    ['cvlc','CanucksHellYeah.mp3', '--play-and-exit']
-                    )  # Linux
+                subprocess.call(['omxplayer', 'CanucksHellYeah.mp3'])  # Raspi
+                # subprocess.call(
+                #     ['cvlc','CanucksHellYeah.mp3', '--play-and-exit']
+                #     )  # Linux
                 # Flash lights
                 # blink(50, 11, 1)  # Should work on Raspi but is untested
                 old_score = new_score  # So we can evaluate for next goal
