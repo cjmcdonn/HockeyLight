@@ -1,23 +1,36 @@
 import datetime
 import time
-import os
+import subprocess
 # import RPi.GPIO as GPIO
 import urllib.request
 from bs4 import BeautifulSoup
 
 
-def getscore():
-    team = "Vancouver"
+def get_score(team):
+    """
+    Return the score of the selected team.
+
+    Requires the Beautifulsoup4 library and Rpi.GPIO module.
+
+    team = "Team_City"
+    The script is configured to work with www.nhl.com/ice/scores.htm
+    and will need to be modified if other URLs are used.
+    text=team scrapes the table containing the desired team.
+    class_='total' selects the cell holding the total score.
+    If the given team is not on the schedule to play 998 will be returned.
+    """
+
+    #url = "http://www.nhl.com/ice/scores.htm?date=12/22/2014&season=20142015"
     url = "http://www.nhl.com/ice/scores.htm"
     page = urllib.request.urlopen(url)
     soup = BeautifulSoup(page)
-    team_list = soup.find('a', text=team)  # Scrapes score from table data out of table matching team name
+    team_list = soup.find('a', text=team)
     try:
         for td in team_list.parent.find_next_siblings('td', class_='total'):
             current_score = td.text
             return int(current_score)
     except AttributeError:
-        current_score = 998  # 998 indicates the team is not on the schedule for that day
+        current_score = 998
         return int(current_score)
 
 
@@ -33,7 +46,26 @@ def getscore():
 
 
 def main():
-    # Set first oldScore variable
+    """
+    Alert when a goal is scored by a specified team.
+
+    Requires omxplayer on Raspberry Pi.
+
+    While in the off-season update the month every hour.
+    In-season but outside of any game times check the hour every 2 minutes.
+    During potential game times run get_score() and then wait 2 seconds before
+    restarting the loop.
+
+    If get_score() returns 0 there has not been a goal in the game so it is
+    safe to reset old_score to 0.
+    If get_score() returns 998 then the desired team is not on the schedule
+    and the loop will wait one hour before restarting.
+    If get_score() returns a reasonable score greater than old_score it will
+    indicate a goal has been scored, triggering the sound and light and
+    setting old_score equal to new_score.
+    """
+
+    # Set first old_score variable
     old_score = 0
     # Set first current hour and month variable
     now = datetime.datetime.now()
@@ -42,30 +74,35 @@ def main():
 
     continuous = True  # Loop to run 24/7/365
     while continuous:
-        while month in (7, 8, 9):  # Slow program during off months
+        while month in (7, 8, 9):
             time.sleep(3600)
             now = datetime.datetime.now()
             month = now.month
-        while hour < 11:  # Slow program down during off hours
+        while hour < 11:
             time.sleep(120)
             now = datetime.datetime.now()
             hour = now.hour
-        while 10 < hour:  # Run GetScore from 1100 to 23:59, after 23:59 hour should reset to 0
-            new_score = getscore()
+        while 10 < hour:
+            new_score = get_score("Vancouver")
+            print(new_score)
             if new_score == 0:
                 old_score = new_score
-            elif new_score == 999:  # Indicates game hasn't started yet, triggers short sleep - unsupported
-                time.sleep(60)
-            elif new_score == 998:  # Indicates team is not on schedule,triggers long sleep
+            elif new_score == 999:  # Game hasn't started - unsupported
+                time.sleep(15)
+            elif new_score == 998:  # Team not on schedule
                 time.sleep(3600)
             elif new_score > old_score:  # Goal has been scored
+                print('GOAL!')
                 # Play sound
-                os.startfile('Canucks Hell Yeah Custom.mp3')  # For testing on Windows
-                # os.system('Canucks Hell Yeah Custom.mp3 -q &')  # Should work on Raspi but is untested
+                #os.startfile('Canucks Hell Yeah Custom.mp3')  # Windows
+                subprocess.call(['omxplayer', 'CanucksHellYeah.mp3'])  # Raspi
+                # subprocess.call(
+                #     ['cvlc','CanucksHellYeah.mp3', '--play-and-exit']
+                #     )  # Linux
                 # Flash lights
-                # blink(50, 11, 1)  # blink(num_times, pin, speed) # Should work on Raspi but is untested
-                old_score = new_score  # Set oldScore = newScore so we can evaluate for next goal
-            now = datetime.datetime.now()  # Update hour while running while loop
+                # blink(50, 11, 1)  # Should work on Raspi but is untested
+                old_score = new_score  # So we can evaluate for next goal
+            now = datetime.datetime.now()  # Update hour inside of loop
             hour = now.hour
             time.sleep(2)  # Slow this dude down a bit
 
